@@ -556,7 +556,7 @@ void GameWorld::checkCaseling(int site,int y,int x ) {
 		{
 			if (!anyOnGrid(7,2,  0) && !anyOnGrid( 7,2, 1) &&
 				!anyOnGrid(7,3,  0) && !anyOnGrid( 7,3, 1) &&
-				!anyOnGrid(7,4,  0) && !anyOnGrid( 7,4, 1)
+				!anyOnGrid(7,1,  0) && !anyOnGrid( 7,1, 1)
 				)
 			{
 				chosenFigure->posNum = y;
@@ -591,7 +591,7 @@ void GameWorld::checkCaseling(int site,int y,int x ) {
 		{
 			if (!anyOnGrid( 0,2, 0) && !anyOnGrid(0,2, 1) &&
 				!anyOnGrid( 0,3, 0) && !anyOnGrid(0,3, 1) &&
-				!anyOnGrid( 0,4, 0) && !anyOnGrid(0,4, 1)
+				!anyOnGrid( 0,1, 0) && !anyOnGrid(0,1, 1)
 				) {
 				chosenFigure->posNum = y;
 				chosenFigure->posAlph = x;

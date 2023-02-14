@@ -2,7 +2,7 @@
 #include <string>
 #include "Figure.h"
 
-Figure::Figure(std::string type, std::string site, int alph, int num) {
+Figure::Figure(const std::string& type, const std::string& site, int alph, int num) {
 	
 	std::vector<std::vector<bool>>a(8,std::vector<bool>(8,false));
 	ableMoves = a;

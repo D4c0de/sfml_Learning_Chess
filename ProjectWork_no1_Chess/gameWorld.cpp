@@ -62,13 +62,12 @@ void GameWorld::setUpInternalState() {
 
 }
 void GameWorld::loadTextures() {
+
 	TexturesEmpty[0].loadFromFile("images/free/dark.png");
 	TexturesEmpty[1].loadFromFile("images/free/light.png");
-	std::string grid[2];
+	
 	std::string figureColor[2];
 	std::string figureType[7];
-	grid[0] = "d";
-	grid[1] = "l";
 	figureColor[0] = "d";
 	figureColor[1] = "l";
 	figureType[0] = "p";
@@ -77,35 +76,21 @@ void GameWorld::loadTextures() {
 	figureType[3] = "b";
 	figureType[4] = "q";
 	figureType[5] = "k";
+	TexturesAble[0].loadFromFile("images/ablemoves/ae.png");
 
-	for (int x = 0; x < 2; x++)
+	for (int y = 0; y < 2; y++)
 	{
-		for (int y = 0; y < 2; y++)
+		for (int z = 0; z < 6; z++)
 		{
-			for (int z = 0; z < 6; z++)
-			{
-				texturesFull[x][y][z].loadFromFile("images/occupied/Chess_" + figureType[z] + figureColor[y] + grid[x] + "45.svg.png");
-
-			}
+			texturesFull[y][z].loadFromFile("images/pices/" +  figureColor[y] + figureType[z] + ".png");
 		}
 	}
-
+	
 }
 
 void GameWorld::drawFigures() {
 	
-
-	for (int x = 0; x < 8; x++)
-	{
-		for (int y = 0; y< 8; y++)
-		{
-			sf::Sprite sprite;
-			int grid = (x + y) % 2;
-			sprite.setPosition(x * gridLenght, y * gridHeight);
-			sprite.setTexture(TexturesEmpty[grid]);
-			boardNames[x][y] = sprite;
-		}
-	}
+	figuresOnBoard.clear();
 	for (int i = 0; i < figures.size(); i++)
 	{
 		for (int k = 0; k < figures[i].size(); k++)
@@ -118,31 +103,55 @@ void GameWorld::drawFigures() {
 				int id = figures[i][k]->typeID;
 				int x = figures[i][k]->posAlph;
 				int y = figures[i][k]->posNum;
-				int grid = (x + y) % 2;
-				sprite.setTexture(texturesFull[grid][white][id]);
-				sprite.setPosition(x * gridLenght, y * gridHeight);
-				boardNames[x][y] = sprite;
+				if (x!=-1)
+				{
+					sprite.setTexture(texturesFull[white][id]);
+					sprite.setPosition(x * gridLenght, y * gridHeight);
+					figuresOnBoard.push_back(sprite);
+				}
+
 			}
 			
 		}
 	}
-	
+	if (chosenFigure != NULL)
+	{
+		drawAbleMoves();
+	}
+}
+
+void GameWorld::drawAbleMoves() {
+	for (int x = 0; x < 8; x++)
+	{
+		for (int y = 0; y < 8; y++)
+		{
+			if (chosenFigure->ableMoves[x][y]) {
+
+				sf::Sprite sprite;
+				sprite.setTexture(TexturesAble[0]);
+				sprite.setPosition(y * gridLenght, x * gridHeight);
+				figuresOnBoard.push_back(sprite);
+			}
+		}
+	}
+
 }
 
 void GameWorld::setsize() {
 
+	
 	std::vector<sf::Sprite> SpriteRow;
 	for (int a = 0; a < 8; a++)
 	{
 		for (int b = 0; b < 4; b++)
 		{
 			sf::Sprite sprite;
-			if (a%2==0)
+			if (a % 2 == 0)
 			{
 				for (int i = 0; i < 2; i++)
 				{
 					sprite.setTexture(TexturesEmpty[i]);
-					sprite.setPosition(a * gridLenght, ((b*2)+i) * gridHeight);
+					sprite.setPosition(a * gridLenght, ((b * 2) + i) * gridHeight);
 					SpriteRow.push_back(sprite);
 
 				}
@@ -152,18 +161,18 @@ void GameWorld::setsize() {
 				for (int i = 1; i >= 0; i--)
 				{
 					sprite.setTexture(TexturesEmpty[i]);
-					sprite.setPosition(a * gridLenght, ((b*2)+(1-i)) * gridHeight);
+					sprite.setPosition(a * gridLenght, ((b * 2) + (1 - i)) * gridHeight);
 					SpriteRow.push_back(sprite);
 
 				}
 			}
-			 
+
 		}
 		boardNames.push_back(SpriteRow);
 		SpriteRow.clear();
 	}
+	
 }
-
 
 
 
@@ -194,7 +203,7 @@ void GameWorld::figureMove(int gridX,int gridY) {
 	}
 	if (chosenFigure->ableMoves[gridX][gridY] == true) {
 		takes(gridX, gridY);
-		if (chosenFigure->typeName == "pawn"&&(gridX==0||gridY==7))
+		if (chosenFigure->typeName == "pawn"&&(gridX==0||gridX==7))
 		{
 			chosenFigure->typeName = "queen";
 			chosenFigure->typeID = 4;
@@ -247,12 +256,24 @@ void GameWorld::takes(int gridX, int gridY) {
 	for (int site = 0; site < figures.size(); site++)
 	{
 
-
 		for (int i = 0; i < figures[site].size(); i++)
 		{
 			if (figures[site][i]->posNum == gridX && figures[site][i]->posAlph == gridY) {
 
+				if (figures[site][i]->typeName=="king")
+				{
+					if (site)
+					{
+						std::cout << "black win\n";
+					}
+					else
+					{
+						std::cout << "white win\n";
+					}
+					end = true;
+				}
 				figures[site][i]->posNum = -1;
+
 				return;
 			}
 		}

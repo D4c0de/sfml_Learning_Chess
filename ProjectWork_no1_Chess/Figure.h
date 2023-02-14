@@ -9,7 +9,6 @@ class Figure
 public:
 
 	
-	bool isAlive;
 	std::string typeName;
 	int typeID;
 	int isBlack;
@@ -20,7 +19,7 @@ public:
 	void clearMoves();
 
 
-	Figure(std::string, std::string, int, int);
+	Figure(const std::string&, const std::string&, int, int);
 	~Figure();
 
 };
