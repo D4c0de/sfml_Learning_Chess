@@ -3,14 +3,14 @@
 #include <iostream>
 
 
-GameWorld::GameWorld(int width,int height) {
+GameWorld::GameWorld(int width,int height, sf::RenderWindow* Window) {
+	window = Window;
 	gridLenght = width / 8;
 	gridHeight = height / 8;
 	chosenFigure = NULL;
 
 	setUpInternalState();
 	loadTextures();
-	setsize();
 
 }
 
@@ -18,7 +18,9 @@ GameWorld::GameWorld(int width,int height) {
 
 
 void GameWorld::setUpInternalState() {
+	figures.clear();
 	std::vector<Figure*> Row;
+	moveNo = 0;
 	Row.push_back(new Figure("pawn", "white", 0, 1));
 	Row.push_back(new Figure("pawn", "white", 1, 1));
 	Row.push_back(new Figure("pawn", "white", 2, 1));
@@ -62,20 +64,21 @@ void GameWorld::setUpInternalState() {
 
 }
 void GameWorld::loadTextures() {
+	std::string figureColor[2];
+	std::string figureType[7];
+	figureColor[0] = "d";//dark
+	figureColor[1] = "l";//light
+	figureType[0] = "p";//pawn
+	figureType[1] = "r";//rook
+	figureType[2] = "n";//knight
+	figureType[3] = "b";//bishop
+	figureType[4] = "q";//queen
+	figureType[5] = "k";//king
 
+	
 	TexturesEmpty[0].loadFromFile("images/free/dark.png");
 	TexturesEmpty[1].loadFromFile("images/free/light.png");
 	
-	std::string figureColor[2];
-	std::string figureType[7];
-	figureColor[0] = "d";
-	figureColor[1] = "l";
-	figureType[0] = "p";
-	figureType[1] = "r";
-	figureType[2] = "n";
-	figureType[3] = "b";
-	figureType[4] = "q";
-	figureType[5] = "k";
 	TexturesAble[0].loadFromFile("images/ablemoves/ae.png");
 
 	for (int y = 0; y < 2; y++)
@@ -86,11 +89,42 @@ void GameWorld::loadTextures() {
 		}
 	}
 	
+
+
+
 }
 
 void GameWorld::drawFigures() {
 	
-	figuresOnBoard.clear();
+		for (int a = 0; a < 8; a++)
+		{
+			for (int b = 0; b < 4; b++)
+			{
+				sf::Sprite sprite;
+				if (a % 2 == 0)
+				{
+					for (int i = 0; i < 2; i++)
+					{
+						sprite.setTexture(TexturesEmpty[i]);
+						sprite.setPosition(a * gridLenght, ((b * 2) + i) * gridHeight);
+						window->draw(sprite);
+
+					}
+				}
+				else
+				{
+					for (int i = 1; i >= 0; i--)
+					{
+						sprite.setTexture(TexturesEmpty[i]);
+						sprite.setPosition(a * gridLenght, ((b * 2) + (1 - i)) * gridHeight);
+						window->draw(sprite);
+
+					}
+				}
+
+			}
+		}
+	
 	for (int i = 0; i < figures.size(); i++)
 	{
 		for (int k = 0; k < figures[i].size(); k++)
@@ -107,7 +141,7 @@ void GameWorld::drawFigures() {
 				{
 					sprite.setTexture(texturesFull[white][id]);
 					sprite.setPosition(x * gridLenght, y * gridHeight);
-					figuresOnBoard.push_back(sprite);
+					window->draw(sprite);
 				}
 
 			}
@@ -116,68 +150,28 @@ void GameWorld::drawFigures() {
 	}
 	if (chosenFigure != NULL)
 	{
-		drawAbleMoves();
-	}
-}
-
-void GameWorld::drawAbleMoves() {
-	for (int x = 0; x < 8; x++)
-	{
-		for (int y = 0; y < 8; y++)
+		for (int x = 0; x < 8; x++)
 		{
-			if (chosenFigure->ableMoves[x][y]) {
+			for (int y = 0; y < 8; y++)
+			{
+				if (chosenFigure->ableMoves[x][y]) {
 
-				sf::Sprite sprite;
-				sprite.setTexture(TexturesAble[0]);
-				sprite.setPosition(y * gridLenght, x * gridHeight);
-				figuresOnBoard.push_back(sprite);
+					sf::Sprite sprite;
+					sf::Texture texture;
+					sprite.setTexture(TexturesAble[0]);
+					sprite.setPosition(y * gridLenght, x * gridHeight);
+					window->draw(sprite);
+				}
 			}
 		}
 	}
-
-}
-
-void GameWorld::setsize() {
-
-	
-	std::vector<sf::Sprite> SpriteRow;
-	for (int a = 0; a < 8; a++)
-	{
-		for (int b = 0; b < 4; b++)
-		{
-			sf::Sprite sprite;
-			if (a % 2 == 0)
-			{
-				for (int i = 0; i < 2; i++)
-				{
-					sprite.setTexture(TexturesEmpty[i]);
-					sprite.setPosition(a * gridLenght, ((b * 2) + i) * gridHeight);
-					SpriteRow.push_back(sprite);
-
-				}
-			}
-			else
-			{
-				for (int i = 1; i >= 0; i--)
-				{
-					sprite.setTexture(TexturesEmpty[i]);
-					sprite.setPosition(a * gridLenght, ((b * 2) + (1 - i)) * gridHeight);
-					SpriteRow.push_back(sprite);
-
-				}
-			}
-
-		}
-		boardNames.push_back(SpriteRow);
-		SpriteRow.clear();
-	}
-	
 }
 
 
 
 
 void GameWorld::mousePressd(int x,int y) {
+
 	int gridX = x / gridHeight;
 	int gridY = y / gridLenght;
 	//std::cout << "grid x/y " << gridX << " " << gridY << " \n";

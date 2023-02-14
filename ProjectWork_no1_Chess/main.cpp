@@ -7,6 +7,7 @@
 
 
 int main() {
+	
 	bool play=true;
 	while (play)
 	{
@@ -15,8 +16,8 @@ int main() {
 		int windowWidth = 360;
 		int windowLenght = 360;
 		sf::RenderWindow window(sf::VideoMode(windowWidth, windowLenght), "chess");
-		GameWorld gameWorld = GameWorld(windowWidth, windowLenght);
-
+		GameWorld gameWorld = GameWorld(windowWidth, windowLenght, &window);
+		gameWorld.debugMode = true;
 		bool sleepTime = false;
 
 		while (window.isOpen() && !gameWorld.end)
@@ -37,19 +38,8 @@ int main() {
 				sleepTime = true;
 			}
 			window.clear();
+			
 			gameWorld.drawFigures();
-			for (int i = 0; i < 8; i++)
-			{
-				for (int j = 0; j < 8; j++)
-				{
-
-					window.draw(gameWorld.boardNames[i][j]);
-				}
-			}
-			for (int i = 0; i < gameWorld.figuresOnBoard.size(); i++)
-			{
-				window.draw(gameWorld.figuresOnBoard[i]);
-			}
 
 
 

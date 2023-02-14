@@ -11,27 +11,24 @@ class GameWorld
 {
 public:
 
-	GameWorld(int, int);
+	GameWorld(int, int, sf::RenderWindow*);
 	void drawFigures();
 	void mousePressd(int, int);
-	std::vector<std::vector<sf::Sprite>> boardNames;
-	std::vector<sf::Sprite> figuresOnBoard;;
+	bool end=false;
+	bool debugMode;
+private:
 
-
+	sf::RenderWindow* window;
+	int moveNo;
 	float gridLenght;
 	float gridHeight;
 	void loadTextures();
 	void setUpInternalState();
-	bool end=false;
-private:
-	void setsize();
 	std::vector<std::vector<Figure*>> figures;
-
 	sf::Texture texturesFull[2][6];
 	sf::Texture TexturesEmpty[2];
-	sf::Texture TexturesAble[2];
+	sf::Texture TexturesAble[1];
 	Figure* chosenFigure;
-	void drawAbleMoves();
 	void choseFigure(int, int);
 	void figureMove(int, int);
 	void checkAbleMoves();

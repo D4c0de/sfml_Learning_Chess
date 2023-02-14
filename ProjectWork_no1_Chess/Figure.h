@@ -8,7 +8,8 @@ class Figure
 
 public:
 
-	
+	Figure(const std::string&, const std::string&, int, int);
+	~Figure();
 	std::string typeName;
 	int typeID;
 	int isBlack;
@@ -17,10 +18,6 @@ public:
 	bool isMoved;
 	std::vector<std::vector<bool>>ableMoves;
 	void clearMoves();
-
-
-	Figure(const std::string&, const std::string&, int, int);
-	~Figure();
 
 };
 
