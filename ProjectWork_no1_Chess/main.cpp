@@ -15,9 +15,12 @@ int main() {
 
 		int windowWidth = 360;
 		int windowLenght = 360;
+		bool debugMode = false;
+
+
 		sf::RenderWindow window(sf::VideoMode(windowWidth, windowLenght), "chess");
-		GameWorld gameWorld = GameWorld(windowWidth, windowLenght, &window);
-		gameWorld.debugMode = true;
+		GameWorld gameWorld = GameWorld(&window, debugMode);
+		
 		bool sleepTime = false;
 
 		while (window.isOpen() && !gameWorld.end)
@@ -38,10 +41,8 @@ int main() {
 				sleepTime = true;
 			}
 			window.clear();
-			
+
 			gameWorld.drawFigures();
-
-
 
 			window.display();
 			if (sleepTime)
@@ -51,9 +52,11 @@ int main() {
 			}
 			sleepTime = false;
 		}
+		gameWorld.deleteFigures();
 		std::cout << "play agan?1/0: ";
 		std::cin >> play;
 		std::cout << "\n";
 	}
+	
 	return 1;
 }

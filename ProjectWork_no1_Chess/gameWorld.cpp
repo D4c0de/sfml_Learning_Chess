@@ -3,24 +3,34 @@
 #include <iostream>
 
 
-GameWorld::GameWorld(int width,int height, sf::RenderWindow* Window) {
+GameWorld::GameWorld(sf::RenderWindow* Window,bool debug) {
 	window = Window;
-	gridLenght = width / 8;
-	gridHeight = height / 8;
+	sf::Vector2u vector=window->getSize();
+	gridLenght = vector.y / 8;
+	gridHeight = vector.x / 8;
 	chosenFigure = NULL;
-
+	debugMode = debug;
 	setUpInternalState();
 	loadTextures();
 
 }
 
 
+void GameWorld::deleteFigures()
+{
+	for (int i = 0; i < 2; i++)
+	{
+		for (int x = 0; x < 16; x++) {
+			delete figures[i][x];
+		}
+	}
+}
 
 
 void GameWorld::setUpInternalState() {
 	figures.clear();
 	std::vector<Figure*> Row;
-	moveNo = 0;
+	moveNo = 1;
 	Row.push_back(new Figure("pawn", "white", 0, 1));
 	Row.push_back(new Figure("pawn", "white", 1, 1));
 	Row.push_back(new Figure("pawn", "white", 2, 1));
@@ -189,25 +199,28 @@ void GameWorld::mousePressd(int x,int y) {
 }
 
 
+
 void GameWorld::figureMove(int gridX,int gridY) {
 
-	if (chosenFigure->typeName=="king")
+	if (chosenFigure->typeID==5)
 	{
 		checkCaseling(chosenFigure->isBlack, gridX, gridY);
+		moveNo++;
 	}
 	if (chosenFigure->ableMoves[gridX][gridY] == true) {
 		takes(gridX, gridY);
-		if (chosenFigure->typeName == "pawn"&&(gridX==0||gridX==7))
+		if (chosenFigure->typeID == 0&&(gridX==0||gridX==7))
 		{
-			chosenFigure->typeName = "queen";
 			chosenFigure->typeID = 4;
 		}
 		chosenFigure->isMoved = true;
 		chosenFigure->posNum = gridX;
 		chosenFigure->posAlph = gridY;
+		moveNo++;
 	}
 	else
 	{
+
 		//std::cout << "ruch nie dozwolony\n";
 	}
 	chosenFigure->clearMoves();
@@ -217,16 +230,30 @@ void GameWorld::figureMove(int gridX,int gridY) {
 
 void GameWorld::choseFigure(int gridX, int gridY) {
 	
-	for (int i = 0; i < 2; i++)
+	if (debugMode)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			for (int k = 0; k < 16; k++)
+			{
+				if (figures[i][k]->posNum == gridX && figures[i][k]->posAlph == gridY)
+				{
+					chosenFigure = figures[i][k];
+					checkAbleMoves();
+					return;
+				}
+
+			}
+		}
+		
+	}
+	else
 	{
 		for (int k = 0; k < 16; k++)
 		{
-			int fx = figures[i][k]->posNum;
-			int fy = figures[i][k]->posAlph;
-			if (fx==gridX&&  fy== gridY)
+			if (figures[moveNo % 2][k]->posNum == gridX && figures[moveNo % 2][k]->posAlph == gridY)
 			{
-				chosenFigure = figures[i][k];
-				//std::cout << "wybrano "+chosenFigure->typeName+"\n";
+				chosenFigure = figures[moveNo % 2][k];
 				checkAbleMoves();
 				return;
 			}
@@ -254,7 +281,7 @@ void GameWorld::takes(int gridX, int gridY) {
 		{
 			if (figures[site][i]->posNum == gridX && figures[site][i]->posAlph == gridY) {
 
-				if (figures[site][i]->typeName=="king")
+				if (figures[site][i]->typeID == 5 )
 				{
 					if (site)
 					{

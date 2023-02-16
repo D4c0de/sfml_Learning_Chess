@@ -11,17 +11,18 @@ class GameWorld
 {
 public:
 
-	GameWorld(int, int, sf::RenderWindow*);
+	GameWorld(sf::RenderWindow*, bool);
 	void drawFigures();
 	void mousePressd(int, int);
-	bool end=false;
+	bool end = false;
 	bool debugMode;
+	void deleteFigures();
 private:
-
+	
 	sf::RenderWindow* window;
-	int moveNo;
-	float gridLenght;
-	float gridHeight;
+	unsigned int moveNo;
+	unsigned int gridLenght;
+	unsigned int gridHeight;
 	void loadTextures();
 	void setUpInternalState();
 	std::vector<std::vector<Figure*>> figures;

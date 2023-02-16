@@ -10,7 +10,6 @@ public:
 
 	Figure(const std::string&, const std::string&, int, int);
 	~Figure();
-	std::string typeName;
 	int typeID;
 	int isBlack;
 	int posAlph;

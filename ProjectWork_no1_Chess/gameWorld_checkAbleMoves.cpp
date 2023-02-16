@@ -10,25 +10,26 @@ void GameWorld::checkAbleMoves() {
 	{
 		enemyColor = 1;
 	}
-	if (chosenFigure->typeName == "pawn")
+	if (chosenFigure->typeID == 0)
 	{
 
 		if (chosenFigure->isBlack == 0)
 		{
-			if (chosenFigure->isMoved == false)
-			{
-				if (!anyOnGrid(x + 2, y, 0) &&
-					!anyOnGrid(x + 2, y, 1) &&
-					!willBeCheck())
-				{
-					chosenFigure->ableMoves[x + 2][y] = true;
-				}
-			}
+			
 			if (!anyOnGrid(x + 1, y, 0) &&
 				!anyOnGrid(x + 1, y, 1) &&
 				!willBeCheck())
 			{
 				chosenFigure->ableMoves[x + 1][y] = true;
+				if (chosenFigure->isMoved == false)
+				{
+					if (!anyOnGrid(x + 2, y, 0) &&
+						!anyOnGrid(x + 2, y, 1) &&
+						!willBeCheck())
+					{
+						chosenFigure->ableMoves[x + 2][y] = true;
+					}
+				}
 			}
 
 			if (anyOnGrid(x + 1, y + 1, enemyColor) &&
@@ -45,23 +46,23 @@ void GameWorld::checkAbleMoves() {
 
 		else if (chosenFigure->isBlack == 1)
 		{
-			if (chosenFigure->isMoved == false)
-			{
-
-
-				if (!anyOnGrid(x - 2, y, 0) &&
-					!anyOnGrid(x - 2, y, 1) &&
-					!willBeCheck())
-
-				{
-					chosenFigure->ableMoves[x - 2][y] = true;
-				}
-			}
+			
 			if (!anyOnGrid(x - 1, y, 0) &&
 				!anyOnGrid(x - 1, y, 1) &&
 				!willBeCheck())
 			{
 				chosenFigure->ableMoves[x - 1][y] = true;
+				if (chosenFigure->isMoved == false)
+				{
+
+					if (!anyOnGrid(x - 2, y, 0) &&
+						!anyOnGrid(x - 2, y, 1) &&
+						!willBeCheck())
+
+					{
+						chosenFigure->ableMoves[x - 2][y] = true;
+					}
+				}
 			}
 
 			if (anyOnGrid(x - 1, y - 1, enemyColor) &&
@@ -74,7 +75,7 @@ void GameWorld::checkAbleMoves() {
 			}
 		}
 	}
-	else if (chosenFigure->typeName == "rook")
+	else if (chosenFigure->typeID == 1)
 	{
 
 		int x2 = x + 1;
@@ -159,7 +160,7 @@ void GameWorld::checkAbleMoves() {
 		}
 
 	}
-	else if (chosenFigure->typeName == "bishop") {
+	else if (chosenFigure->typeID == 3) {
 		int x2 = x + 1;
 		int y2 = y + 1;
 		if (anyOnGrid(x2, y2, enemyColor) &&
@@ -245,7 +246,7 @@ void GameWorld::checkAbleMoves() {
 
 		}
 	}
-	else if (chosenFigure->typeName == "knight") {
+	else if (chosenFigure->typeID == 2) {
 
 
 		if (!anyOnGrid(x + 2, y + 1, chosenFigure->isBlack) &&
@@ -292,7 +293,7 @@ void GameWorld::checkAbleMoves() {
 		}
 
 	}
-	else if (chosenFigure->typeName == "queen")
+	else if (chosenFigure->typeID == 4)
 	{
 		int x2 = x + 1;
 		int y2 = y + 1;
@@ -461,7 +462,7 @@ void GameWorld::checkAbleMoves() {
 
 		}
 	}
-	else if (chosenFigure->typeName == "king") {
+	else if (chosenFigure->typeID == 5) {
 		if (true)
 		{
 			int x2 = x + 1;
