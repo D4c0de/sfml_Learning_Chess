@@ -15,14 +15,14 @@ int main() {
 
 		int windowWidth = 360;
 		int windowLenght = 360;
-		bool debugMode = false;
+		bool debugMode = true;
 
 
 		sf::RenderWindow window(sf::VideoMode(windowWidth, windowLenght), "chess");
 		GameWorld gameWorld = GameWorld(&window, debugMode);
 		
-		bool sleepTime = false;
 
+		bool sleepTime = false;
 		while (window.isOpen() && !gameWorld.end)
 		{
 			sf::Event event;

@@ -17,6 +17,7 @@ public:
 	bool end = false;
 	bool debugMode;
 	void deleteFigures();
+	void checkAbleMoves();
 private:
 	
 	sf::RenderWindow* window;
@@ -32,11 +33,14 @@ private:
 	Figure* chosenFigure;
 	void choseFigure(int, int);
 	void figureMove(int, int);
-	void checkAbleMoves();
+	bool isAble(int, int, int);
 	void takes(int, int);
 	bool willBeCheck();
+
+	bool enPassant(int, int, int);
+
 	bool anyOnGrid(int, int, int);
-	void checkCaseling(int,int,int);
+	bool checkCaseling(int,int,int);
 	
 
 };

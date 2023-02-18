@@ -160,20 +160,15 @@ void GameWorld::drawFigures() {
 	}
 	if (chosenFigure != NULL)
 	{
-		for (int x = 0; x < 8; x++)
+		for (int i = 0; i < chosenFigure->ableMoves.size(); i++)
 		{
-			for (int y = 0; y < 8; y++)
-			{
-				if (chosenFigure->ableMoves[x][y]) {
-
-					sf::Sprite sprite;
-					sf::Texture texture;
-					sprite.setTexture(TexturesAble[0]);
-					sprite.setPosition(y * gridLenght, x * gridHeight);
-					window->draw(sprite);
-				}
-			}
+			sf::Sprite sprite;
+			sprite.setTexture(TexturesAble[0]);
+			sprite.setPosition(chosenFigure->ableMoves[i].y * gridLenght, chosenFigure->ableMoves[i].x * gridHeight);
+			window->draw(sprite);
 		}
+			
+		
 	}
 }
 
@@ -192,6 +187,7 @@ void GameWorld::mousePressd(int x,int y) {
 	else
 	{
 		figureMove(gridX,gridY);
+		chosenFigure->clearMoves();
 		chosenFigure = NULL; 
 
 	}
@@ -202,28 +198,46 @@ void GameWorld::mousePressd(int x,int y) {
 
 void GameWorld::figureMove(int gridX,int gridY) {
 
-	if (chosenFigure->typeID==5)
+	
+	if (chosenFigure->typeID==0)
 	{
-		checkCaseling(chosenFigure->isBlack, gridX, gridY);
-		moveNo++;
+		//enPassant(chosenFigure->isBlack, gridX, gridY);
 	}
-	if (chosenFigure->ableMoves[gridX][gridY] == true) {
-		takes(gridX, gridY);
-		if (chosenFigure->typeID == 0&&(gridX==0||gridX==7))
-		{
-			chosenFigure->typeID = 4;
-		}
-		chosenFigure->isMoved = true;
-		chosenFigure->posNum = gridX;
-		chosenFigure->posAlph = gridY;
-		moveNo++;
-	}
-	else
+	for (int i = 0; i < chosenFigure->ableMoves.size(); i++)
 	{
+		if (chosenFigure->ableMoves[i].x==gridX && chosenFigure->ableMoves[i].y==gridY) {
 
-		//std::cout << "ruch nie dozwolony\n";
+			if (chosenFigure->typeID == 5)
+			{
+				if (checkCaseling(chosenFigure->isBlack, gridX, gridY)) {
+					chosenFigure->lastMovement = moveNo;
+					moveNo++;
+					return;
+				}
+			}
+			if (chosenFigure->typeID == 0)
+			{
+				if (enPassant(chosenFigure->isBlack, gridX, gridY))
+				{
+					chosenFigure->lastMovement = moveNo;
+					moveNo++;
+					return;
+				}
+			}
+			takes(gridX, gridY);
+			if (chosenFigure->typeID == 0 && (gridX == 0 || gridX == 7))
+			{
+				chosenFigure->typeID = 4;
+			}
+			chosenFigure->isMoved = true;
+			chosenFigure->posNum = gridX;
+			chosenFigure->posAlph = gridY;
+			chosenFigure->lastMovement = moveNo;
+			moveNo++;
+			return;
+		}
 	}
-	chosenFigure->clearMoves();
+	
 }
 
 

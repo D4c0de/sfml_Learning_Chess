@@ -4,8 +4,6 @@
 
 Figure::Figure(const std::string& type, const std::string& site, int alph, int num) {
 	
-	std::vector<std::vector<bool>>a(8,std::vector<bool>(8,false));
-	ableMoves = a;
 	posAlph = alph;
 	posNum = num;
 	if (site == "white")
@@ -44,8 +42,7 @@ Figure::Figure(const std::string& type, const std::string& site, int alph, int n
 
 }
 void Figure::clearMoves() {
-	std::vector<std::vector<bool>>a(8, std::vector<bool>(8, false));
-	ableMoves = a;
+	ableMoves.clear();
 }
 
 Figure::~Figure() {
