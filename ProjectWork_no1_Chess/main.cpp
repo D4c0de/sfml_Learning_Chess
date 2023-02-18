@@ -15,7 +15,7 @@ int main() {
 
 		int windowWidth = 360;
 		int windowLenght = 360;
-		bool debugMode = true;
+		bool debugMode = false;
 
 
 		sf::RenderWindow window(sf::VideoMode(windowWidth, windowLenght), "chess");
