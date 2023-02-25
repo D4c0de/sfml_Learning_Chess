@@ -20,8 +20,9 @@ int main() {
 
 		sf::RenderWindow window(sf::VideoMode(windowWidth, windowLenght), "chess");
 		GameWorld gameWorld = GameWorld(&window, debugMode);
-		
-
+		window.clear();
+		gameWorld.drawFigures();
+		window.display();
 		bool sleepTime = false;
 		while (window.isOpen() && !gameWorld.end)
 		{
@@ -37,14 +38,13 @@ int main() {
 			{
 				sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 				gameWorld.mousePressd(mousePos.y, mousePos.x);
+				window.clear();
 
+				gameWorld.drawFigures();
+
+				window.display();
 				sleepTime = true;
 			}
-			window.clear();
-
-			gameWorld.drawFigures();
-
-			window.display();
 			if (sleepTime)
 			{
 				Sleep(300);

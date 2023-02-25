@@ -37,9 +37,13 @@ private:
 	void takes(int, int);
 	bool willBeCheck();
 
+
+	bool inRenge(int, int);
+	bool isMoveAble(int ,int);
+
 	bool enPassant(int, int, int);
 
-	bool anyOnGrid(int, int, int);
+	bool anyOnGrid(int, int, bool);
 	bool checkCaseling(int,int,int);
 	
 

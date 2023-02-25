@@ -1,6 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include "gameWorld.h"
 
+
+bool GameWorld::inRenge(int PosX, int PosY) {
+	if (PosY < 8 && PosY >= 0 && PosX < 8 && PosX >= 0)
+	{
+		return true;
+	}
+	return false;
+};
+bool GameWorld::isMoveAble(int PosX, int PosY) {
+
+	if (!anyOnGrid(PosX, PosY, chosenFigure->isBlack)&& inRenge(PosX,PosY))
+	{
+		return true;
+	}
+	return false;
+}
+
 void GameWorld::checkAbleMoves() {
 
 	int y = chosenFigure->posAlph;
@@ -126,495 +143,114 @@ void GameWorld::checkAbleMoves() {
 			}
 		}
 	}
-	else if (chosenFigure->typeID == 1)
+	else if (chosenFigure->typeID >= 1&& chosenFigure->typeID <= 4)
 	{
-
-		x2 = x + 1;
-		y2 = y;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (chosenFigure->typeID==2)
 		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
+			for (int i = 0; i < chosenFigure->movePatern.size(); i++)
+			{
+				x2 = x + chosenFigure->movePatern[i].x;
+				y2 = y + chosenFigure->movePatern[i].y;
+				if (isMoveAble(x2, y2)) {
+					chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
+				}
+			}
+			return;
 		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		for (int i = 0; i < chosenFigure->movePatern.size(); i++)
 		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+			x2 = x+chosenFigure->movePatern[i].x;
+			y2 = y + chosenFigure->movePatern[i].y;
+			while (isMoveAble(x2, y2))
 			{
 				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
+				if (anyOnGrid(x2, y2, !chosenFigure->isBlack))
+				{
+					break;
+				}
+				x2+=chosenFigure->movePatern[i].x;
+				y2 += chosenFigure->movePatern[i].y;
+
 			}
-
+			
 		}
-		x2 = x - 1;
-		y2 = y;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x;
-		y2 = y - 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-
-	}
-	else if (chosenFigure->typeID == 3) {
-		x2 = x + 1;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x + 1;
-		y2 = y - 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			y2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x - 1;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2--;
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x - 1;
-		y2 = y - 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2--;
-			x2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-	}
-	else if (chosenFigure->typeID == 2) {
-
-		x2 = x + 2;
-		y2 = y + 1;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		x2 = x + 2;
-		y2 = y - 1;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		x2 = x - 2;
-		y2 = y + 1;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		x2 = x - 2;
-		y2 = y - 1;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-
-		x2 = x + 1;
-		y2 = y + 2;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-
-		x2 = x + 1;
-		y2 = y - 2;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		x2 = x - 1;
-		y2 = y - 2;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-
-		x2 = x - 1;
-		y2 = y + 2;
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-
-	}
-	else if (chosenFigure->typeID == 4)
-	{
-		x2 = x + 1;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x + 1;
-		y2 = y - 1;
-
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			y2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x - 1;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2--;
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x - 1;
-		y2 = y - 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2--;
-			x2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-
-
-		x2 = x + 1;
-		y2 = y;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x - 1;
-		y2 = y;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			x2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x;
-		y2 = y + 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2++;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
-		x2 = x;
-		y2 = y - 1;
-		if (anyOnGrid(x2, y2, enemyColor) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-		}
-		while (!anyOnGrid(x2, y2, 0) &&
-			!anyOnGrid(x2, y2, 1) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-		{
-			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			y2--;
-			if (anyOnGrid(x2, y2, enemyColor) &&
-				y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
-			{
-				chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
-			}
-
-		}
+		return;
 	}
 	else if (chosenFigure->typeID == 5) {
 
 		x2 = x + 1;
 		y2 = y;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2,y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x + 1;
 		y2 = y + 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x;
 		y2 = y + 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x - 1;
 		y2 = y + 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x - 1;
 		y2 = y;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x - 1;
 		y2 = y - 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x - 1;
 		y2 = y;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x - 1;
 		y2 = y - 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x;
 		y2 = y - 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		x2 = x + 1;
 		y2 = y - 1;
 
-		if (!anyOnGrid(x2, y2, chosenFigure->isBlack) &&
-			y2 < 8 && y2 >= 0 && x2 < 8 && x2 >= 0)
+		if (isMoveAble(x2, y2))
 		{
 			chosenFigure->ableMoves.push_back(sf::Vector2i(x2, y2));
 		}
 		int site = chosenFigure->isBlack;
 
-		if (site == 1)
+		if (chosenFigure->isBlack == true)
 		{
 			if (chosenFigure->isMoved == false && figures[1][8]->isMoved == false && figures[1][8]->posNum != -1)
 			{

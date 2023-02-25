@@ -196,16 +196,16 @@ void GameWorld::mousePressd(int x,int y) {
 
 
 
-void GameWorld::figureMove(int gridX,int gridY) {
+void GameWorld::figureMove(int gridX, int gridY) {
 
-	
-	if (chosenFigure->typeID==0)
+
+	if (chosenFigure->typeID == 0)
 	{
 		//enPassant(chosenFigure->isBlack, gridX, gridY);
 	}
 	for (int i = 0; i < chosenFigure->ableMoves.size(); i++)
 	{
-		if (chosenFigure->ableMoves[i].x==gridX && chosenFigure->ableMoves[i].y==gridY) {
+		if (chosenFigure->ableMoves[i].x == gridX && chosenFigure->ableMoves[i].y == gridY) {
 
 			if (chosenFigure->typeID == 5)
 			{
@@ -237,7 +237,7 @@ void GameWorld::figureMove(int gridX,int gridY) {
 			return;
 		}
 	}
-	
+
 }
 
 
@@ -277,16 +277,27 @@ void GameWorld::choseFigure(int gridX, int gridY) {
 	//std::cout << "na tym polu nic siê nie znajduje \n";
 }
 
-bool GameWorld::anyOnGrid(int gridX, int gridY, int site) {
-	for (int i = 0; i < figures[site].size(); i++)
+bool GameWorld::anyOnGrid(int gridX, int gridY, bool site) {
+
+	int sitei;
+	if (site==true)
 	{
-		if (figures[site][i]->posNum == gridX&& figures[site][i]->posAlph == gridY) {
+		sitei = 1;
+	}
+	else
+	{
+		sitei = 0;
+	}
+	for (int i = 0; i < figures[sitei].size(); i++)
+	{
+		if (figures[sitei][i]->posNum == gridX&& figures[sitei][i]->posAlph == gridY) {
 			
 			return true;
 		}
 	}
 	return false;
 }
+
 void GameWorld::takes(int gridX, int gridY) {
 	for (int site = 0; site < figures.size(); site++)
 	{
